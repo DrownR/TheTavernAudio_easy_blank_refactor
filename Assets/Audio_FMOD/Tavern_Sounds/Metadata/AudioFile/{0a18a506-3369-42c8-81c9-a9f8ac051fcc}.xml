@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="AudioFile" id="{0a18a506-3369-42c8-81c9-a9f8ac051fcc}">
+		<property name="assetPath">
+			<value>Player/Wood/Jump_Land/Landing/foot_land_3.flac</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>0.55518749999999994</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{7beed3b9-da71-44b8-be3a-8637c50b02b6}</destination>
+		</relationship>
+	</object>
+</objects>

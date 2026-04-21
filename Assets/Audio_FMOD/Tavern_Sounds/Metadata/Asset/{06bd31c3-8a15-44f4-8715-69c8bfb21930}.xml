@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.03.00">
+	<object class="EncodableAsset" id="{06bd31c3-8a15-44f4-8715-69c8bfb21930}">
+		<property name="assetPath">
+			<value>Player/Wood/Jump_Land/</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{7beed3b9-da71-44b8-be3a-8637c50b02b6}</destination>
+		</relationship>
+	</object>
+</objects>
