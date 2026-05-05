@@ -1,5 +1,32 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-7981689994968228142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: snapshot:/OutAct_InInact
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: snapshot:/OutAct_InInact
+  Guid:
+    Data1: 1494892566
+    Data2: 1197085105
+    Data3: 1531395716
+    Data4: 1706432746
+  Banks:
+  - {fileID: 4227459627042314741}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
 --- !u!114 &-6519192015210755972
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -284,13 +311,15 @@ MonoBehaviour:
   - {fileID: -3187480214826742251}
   - {fileID: 3658462361333124553}
   - {fileID: 5709863357571425110}
+  - {fileID: -7981689994968228142}
+  - {fileID: 2053739161711669324}
   EditorParameters: []
   MasterBanks:
   - {fileID: 4227459627042314741}
   StringsBanks:
   - {fileID: 1796006173712966061}
   cacheVersion: 131859
-  cacheTime: 639123956067257748
+  cacheTime: 639136068582806294
   SerializableEventsDict:
   - key: event:/Environment/Door
     index: 0
@@ -306,6 +335,10 @@ MonoBehaviour:
     index: 5
   - key: event:/Amb/amb_tavern_people_1
     index: 6
+  - key: snapshot:/OutAct_InInact
+    index: 7
+  - key: snapshot:/InAct_OutInact
+    index: 8
 --- !u!114 &232555334013671989
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -484,11 +517,38 @@ MonoBehaviour:
   Path: Assets/Audio_FMOD/Tavern_Sounds/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639123956067257748
+  lastModified: 639136068582806294
   FileSizes:
   - Name: Desktop
-    Value: 1284
+    Value: 1472
   Exists: 1
+--- !u!114 &2053739161711669324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: snapshot:/InAct_OutInact
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: snapshot:/InAct_OutInact
+  Guid:
+    Data1: -282650766
+    Data2: 1222974143
+    Data3: 1341778864
+    Data4: -1486770184
+  Banks:
+  - {fileID: 4227459627042314741}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 0
+  MaxDistance: 0
+  Length: 0
 --- !u!114 &2391933394926712872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -587,10 +647,10 @@ MonoBehaviour:
   Path: Assets/Audio_FMOD/Tavern_Sounds/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639123956067247693
+  lastModified: 639136068582796262
   FileSizes:
   - Name: Desktop
-    Value: 7168000
+    Value: 7169504
   Exists: 1
 --- !u!114 &5376617874867260089
 MonoBehaviour:
