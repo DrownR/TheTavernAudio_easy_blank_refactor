@@ -17,6 +17,9 @@ public class Outside_foot_switch : MonoBehaviour
     private FMOD.Studio.EventInstance outsideSnapshotInstance;
     public EventReference outsideSnapshot;
 
+    private FMOD.Studio.EventInstance insideSnapshotInstance;
+    public EventReference insideSnapshot;
+
     void Start()
     {
         distToGround = GetComponent<Collider>().bounds.extents.y;
@@ -44,7 +47,7 @@ public class Outside_foot_switch : MonoBehaviour
                 ToggleSnapshot(true);
             }
             // Wyłącza snapshot, jeśli gracz jest wewnątrz, a snapshot jest aktywny.
-            else if ((tag == "Inside_stone" || tag == "Inside_wood") && snapshotActivated)
+            else if ((tag == "Stone" || tag == "Inside_wood") && snapshotActivated)
             {
                 ToggleSnapshot(false);
             }
@@ -62,13 +65,22 @@ public class Outside_foot_switch : MonoBehaviour
             // Tworzy i startuje instancję snapshotu.
             outsideSnapshotInstance = FMODUnity.RuntimeManager.CreateInstance(outsideSnapshot);
             outsideSnapshotInstance.start();
+
+            if (insideSnapshotInstance.isValid())
+            {
+                insideSnapshotInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                insideSnapshotInstance.release();
+            }
         }
         else
         {
+            insideSnapshotInstance = FMODUnity.RuntimeManager.CreateInstance(insideSnapshot);
+            insideSnapshotInstance.start();
+
             // Zatrzymuje i zwalnia instancję snapshotu, jeśli jest prawidłowa.
             if (outsideSnapshotInstance.isValid())
             {
-                outsideSnapshotInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                outsideSnapshotInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
                 outsideSnapshotInstance.release();
             }
         }

@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.03.00">
 	<object class="Snapshot" id="{ef271772-1abf-48e5-b0eb-f94ff8af61a7}">
 		<property name="name">
-			<value>InAct_OutInact</value>
+			<value>Outside_Act</value>
 		</property>
 		<relationship name="mixer">
 			<destination>{c90e0863-2e6b-48c6-a689-e9f0e0f4b10f}</destination>
@@ -50,6 +50,9 @@
 		<property name="value">
 			<value>0</value>
 		</property>
+		<relationship name="modulators">
+			<destination>{17b94bcb-aec3-4313-824b-e68720f24abe}</destination>
+		</relationship>
 		<relationship name="automatableObject">
 			<destination>{4270c9b0-198c-40cf-8f97-3f7044d5da20}</destination>
 		</relationship>
@@ -63,5 +66,25 @@
 		<relationship name="mixerStrip">
 			<destination>{4270c9b0-198c-40cf-8f97-3f7044d5da20}</destination>
 		</relationship>
+	</object>
+	<object class="ADSRModulator" id="{17b94bcb-aec3-4313-824b-e68720f24abe}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>value</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>520</value>
+		</property>
+		<property name="holdTime">
+			<value>0</value>
+		</property>
+		<property name="decayTime">
+			<value>0</value>
+		</property>
+		<property name="finalValue">
+			<value>-80</value>
+		</property>
 	</object>
 </objects>
