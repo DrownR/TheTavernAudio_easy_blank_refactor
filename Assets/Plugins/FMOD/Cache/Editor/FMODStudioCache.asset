@@ -346,7 +346,7 @@ MonoBehaviour:
   StringsBanks:
   - {fileID: 1796006173712966061}
   cacheVersion: 131859
-  cacheTime: 639142115579797482
+  cacheTime: 639142157278355602
   SerializableEventsDict:
   - key: event:/Environment/Door
     index: 0
@@ -544,7 +544,7 @@ MonoBehaviour:
   Path: Assets/Audio_FMOD/Tavern_Sounds/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639142115579797482
+  lastModified: 639142157278355602
   FileSizes:
   - Name: Desktop
     Value: 1464
@@ -647,7 +647,7 @@ MonoBehaviour:
   Path: Assets/Audio_FMOD/Tavern_Sounds/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639142115579787256
+  lastModified: 639142157278337835
   FileSizes:
   - Name: Desktop
     Value: 7169888

@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: VolumeFog
+  m_Shader: {fileID: 4800000, guid: d62e08e13d157c84eaadf1a0a1f1b387, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _FogNoise:
+        m_Texture: {fileID: 11700000, guid: 70c2adccd53fd45468d11570134863c2, type: 2}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _DensityMultiplier: 0.47
+    - _DensityThreshold: 0
+    - _FogOpacity: 0.5
+    - _LightScattering: 0.074
+    - _MaxDistance: 25
+    - _NoiseOffset: 2
+    - _NoiseTiling: 15
+    - _StepSize: 0.5
+    m_Colors:
+    - _Color: {r: 0.46226418, g: 0.3818686, b: 0.3554201, a: 1}
+    - _LightContribution: {r: 0.16037738, g: 0.08329255, b: 0.032529376, a: 1}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
