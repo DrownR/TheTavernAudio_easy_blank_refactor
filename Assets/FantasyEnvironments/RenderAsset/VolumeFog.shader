@@ -5,6 +5,7 @@ Shader "Custom/VolumeFog"
         _Color("Color", Color) = (1, 1, 1, 1)
         _MaxDistance("Max distance", float) = 100
         _StepSize("Step size", Range(0.1, 20)) = 1
+        _MaxSteps("Max Steps", Range(1, 256)) = 64
         _DensityMultiplier("Density multiplier", Range(0, 10)) = 1
         _NoiseOffset("Noise offset", float) = 0
         
@@ -15,6 +16,9 @@ Shader "Custom/VolumeFog"
         [HDR]_LightContribution("Light contribution", Color) = (1, 1, 1, 1)
         _LightScattering("Light scattering", Range(0, 1)) = 0.2
         _FogOpacity("Fog Opacity", Range(0, 1)) = 1
+
+         [Toggle]_UseAdditionalLights("Use Point / Spot Lights", Float) = 0
+        _MaxAdditionalLights("Max Additional Lights", Range(0, 16)) = 4
     }
 
     SubShader
@@ -33,6 +37,9 @@ Shader "Custom/VolumeFog"
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_CASCADE
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS_SCREEN
 
+              #pragma multi_compile _ _ADDITIONAL_LIGHTS
+            #pragma multi_compile _ _ADDITIONAL_LIGHT_SHADOWS
+
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 
@@ -44,6 +51,7 @@ Shader "Custom/VolumeFog"
 
             float _MaxDistance;
             float _StepSize;
+            int _MaxSteps;
 
             float _DensityMultiplier;
             float _DensityThreshold;
@@ -55,6 +63,9 @@ Shader "Custom/VolumeFog"
 
             float _LightScattering;
             float _FogOpacity;
+
+            float _UseAdditionalLights;
+            int _MaxAdditionalLights;
 
             TEXTURE3D(_FogNoise);
 
@@ -91,19 +102,106 @@ Shader "Custom/VolumeFog"
 
                 return density;
             }
+            
+            float3 CalculateMainLightFog(
+                float3 rayPos,
+                float3 rayDir,
+                float density,
+                float transmittance
+            )
+            {
+                float4 shadowCoord =
+                    TransformWorldToShadowCoord(rayPos);
+
+                Light mainLight =
+                    GetMainLight(shadowCoord);
+
+                float cosTheta =
+                    dot(rayDir, mainLight.direction);
+
+                float phase =
+                    henyey_greenstein(
+                        cosTheta,
+                        _LightScattering
+                    ) * 10.0;
+
+                float3 scattering =
+                    mainLight.color.rgb *
+                    mainLight.shadowAttenuation *
+                    phase;
+
+                return
+                    scattering *
+                    density *
+                    transmittance *
+                    _StepSize *
+                    _LightContribution.rgb;
+            }
+
+            float3 CalculateAdditionalLightsFog(
+                float3 rayPos,
+                float3 rayDir,
+                float density,
+                float transmittance
+            )
+            {
+                float3 result = 0;
+
+                #ifdef _ADDITIONAL_LIGHTS
+
+                if (_UseAdditionalLights > 0.5)
+                {
+                    uint lightCount =
+                        GetAdditionalLightsCount();
+
+                    lightCount =
+                        min(lightCount, (uint)_MaxAdditionalLights);
+
+                    for (uint i = 0; i < lightCount; i++)
+                    {
+                        Light light =
+                            GetAdditionalLight(i, rayPos);
+
+                        float cosTheta =
+                            dot(rayDir, light.direction);
+
+                        float phase =
+                            henyey_greenstein(
+                                cosTheta,
+                                _LightScattering
+                            ) * 10.0;
+
+                        float attenuation =
+                            light.distanceAttenuation *
+                            light.shadowAttenuation;
+
+                        float3 scattering =
+                            light.color.rgb *
+                            attenuation *
+                            phase;
+
+                        result +=
+                            scattering *
+                            density *
+                            transmittance *
+                            _StepSize *
+                            _LightContribution.rgb;
+                    }
+                }
+
+                #endif
+
+                return result;
+            }
 
             half4 frag(Varyings IN) : SV_Target
             {
-                // SCENE COLOR
-
                 float4 sceneColor =
                     SAMPLE_TEXTURE2D(
                         _BlitTexture,
                         sampler_LinearClamp,
                         IN.texcoord
                     );
-
-                // DEPTH
 
                 float depth =
                     SampleSceneDepth(IN.texcoord);
@@ -114,8 +212,6 @@ Shader "Custom/VolumeFog"
                         depth,
                         UNITY_MATRIX_I_VP
                     );
-
-                // VIEW RAY
 
                 float3 cameraPos =
                     _WorldSpaceCameraPos;
@@ -129,14 +225,12 @@ Shader "Custom/VolumeFog"
                 float3 rayDir =
                     normalize(viewVector);
 
-                // RAYMARCH SETUP
+                float distLimit =
+                    min(viewLength, _MaxDistance);
 
                 float2 pixelCoords =
                     IN.texcoord *
                     _BlitTexture_TexelSize.zw;
-
-                float distLimit =
-                    min(viewLength, _MaxDistance);
 
                 float distTravelled =
                     InterleavedGradientNoise(
@@ -148,10 +242,11 @@ Shader "Custom/VolumeFog"
 
                 float3 fogLighting = 0;
 
-                // RAYMARCH
-
-                while(distTravelled < distLimit)
+                for (int stepIndex = 0; stepIndex < _MaxSteps; stepIndex++)
                 {
+                    if (distTravelled >= distLimit)
+                        break;
+
                     float3 rayPos =
                         cameraPos +
                         rayDir * distTravelled;
@@ -159,51 +254,35 @@ Shader "Custom/VolumeFog"
                     float density =
                         get_density(rayPos);
 
-                    if(density > 0.001)
+                    if (density > 0.001)
                     {
-                        float4 shadowCoord =
-                            TransformWorldToShadowCoord(rayPos);
-
-                        Light mainLight =
-                            GetMainLight(shadowCoord);
-
-                        float cosTheta =
-                            dot(
+                        fogLighting +=
+                            CalculateMainLightFog(
+                                rayPos,
                                 rayDir,
-                                -mainLight.direction
+                                density,
+                                transmittance
                             );
 
-                        float phase =
-                            henyey_greenstein(
-                                cosTheta,
-                                _LightScattering
-                            ) * 10;
-
-                        float3 scattering =
-                            mainLight.color.rgb *
-                            mainLight.shadowAttenuation *
-                            phase;
-
                         fogLighting +=
-                            scattering *
-                            density *
-                            transmittance *
-                            _StepSize *
-                            _LightContribution.rgb;
+                            CalculateAdditionalLightsFog(
+                                rayPos,
+                                rayDir,
+                                density,
+                                transmittance
+                            );
 
                         transmittance *=
                             exp(-density * _StepSize);
 
-                        if(transmittance < 0.01)
+                        if (transmittance < 0.01)
                             break;
                     }
 
                     distTravelled += _StepSize;
                 }
 
-                // FINAL COMPOSITION
-
-               float fogAmount =
+                float fogAmount =
                     (1.0 - saturate(transmittance)) *
                     _FogOpacity;
 
