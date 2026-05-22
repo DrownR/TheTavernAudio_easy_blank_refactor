@@ -80,25 +80,12 @@ Shader "Custom/VolumeFog"
 
             float get_density(float3 worldPos)
             {
-                float3 uvw =
-                    worldPos *
-                    0.01 *
-                    _NoiseTiling;
+                float3 uvw = worldPos * 0.01 * _NoiseTiling; 
+                float4 noise = SAMPLE_TEXTURE3D_LOD( _FogNoise, sampler_TrilinearRepeat, uvw, 0 );
 
-                float4 noise =
-                    SAMPLE_TEXTURE3D_LOD(
-                        _FogNoise,
-                        sampler_TrilinearRepeat,
-                        uvw,
-                        0
-                    );
+                float density = dot(noise.rgb, float3(0.3333, 0.3333, 0.3333));
 
-                float density =
-                    dot(noise.rgb, float3(0.3333, 0.3333, 0.3333));
-
-                density =
-                    saturate(density - _DensityThreshold) *
-                    _DensityMultiplier;
+                density = saturate(density - _DensityThreshold) * _DensityMultiplier;
 
                 return density;
             }
@@ -110,20 +97,13 @@ Shader "Custom/VolumeFog"
                 float transmittance
             )
             {
-                float4 shadowCoord =
-                    TransformWorldToShadowCoord(rayPos);
+                float4 shadowCoord = TransformWorldToShadowCoord(rayPos);
 
-                Light mainLight =
-                    GetMainLight(shadowCoord);
+                Light mainLight = GetMainLight(shadowCoord);
 
-                float cosTheta =
-                    dot(rayDir, mainLight.direction);
+                float cosTheta = dot(rayDir, mainLight.direction);
 
-                float phase =
-                    henyey_greenstein(
-                        cosTheta,
-                        _LightScattering
-                    ) * 10.0;
+                float phase = henyey_greenstein( cosTheta, _LightScattering ) * 10.0;
 
                 float3 scattering =
                     mainLight.color.rgb *
@@ -151,34 +131,19 @@ Shader "Custom/VolumeFog"
 
                 if (_UseAdditionalLights > 0.5)
                 {
-                    uint lightCount =
-                        GetAdditionalLightsCount();
+                   uint lightCount = GetAdditionalLightsCount();
+                   uint maxLights = min(lightCount, (uint)_MaxAdditionalLights);
 
-                    lightCount =
-                        min(lightCount, (uint)_MaxAdditionalLights);
-
-                    for (uint i = 0; i < lightCount; i++)
+                    for (uint i = 0; i < maxLights; i++)
                     {
-                        Light light =
-                            GetAdditionalLight(i, rayPos);
+                        Light light = GetAdditionalLight(i, rayPos);
 
-                        float cosTheta =
-                            dot(rayDir, light.direction);
+                        float cosTheta = dot(rayDir, light.direction);
+                        float phase = henyey_greenstein(cosTheta, _LightScattering) * 10.0;
 
-                        float phase =
-                            henyey_greenstein(
-                                cosTheta,
-                                _LightScattering
-                            ) * 10.0;
+                        float attenuation = light.distanceAttenuation * light.shadowAttenuation;
 
-                        float attenuation =
-                            light.distanceAttenuation *
-                            light.shadowAttenuation;
-
-                        float3 scattering =
-                            light.color.rgb *
-                            attenuation *
-                            phase;
+                        float3 scattering = light.color.rgb *  attenuation * phase;
 
                         result +=
                             scattering *
@@ -203,8 +168,7 @@ Shader "Custom/VolumeFog"
                         IN.texcoord
                     );
 
-                float depth =
-                    SampleSceneDepth(IN.texcoord);
+                float depth = SampleSceneDepth(IN.texcoord);
 
                 float3 worldPos =
                     ComputeWorldSpacePosition(
@@ -213,20 +177,15 @@ Shader "Custom/VolumeFog"
                         UNITY_MATRIX_I_VP
                     );
 
-                float3 cameraPos =
-                    _WorldSpaceCameraPos;
+                float3 cameraPos = _WorldSpaceCameraPos;
 
-                float3 viewVector =
-                    worldPos - cameraPos;
+                float3 viewVector = worldPos - cameraPos;
 
-                float viewLength =
-                    length(viewVector);
+                float viewLength = length(viewVector);
 
-                float3 rayDir =
-                    normalize(viewVector);
+                float3 rayDir = normalize(viewVector);
 
-                float distLimit =
-                    min(viewLength, _MaxDistance);
+                float distLimit = min(viewLength, _MaxDistance);
 
                 float2 pixelCoords =
                     IN.texcoord *
@@ -247,12 +206,15 @@ Shader "Custom/VolumeFog"
                     if (distTravelled >= distLimit)
                         break;
 
-                    float3 rayPos =
-                        cameraPos +
-                        rayDir * distTravelled;
+                    float3 rayPos =  cameraPos + rayDir * distTravelled;
 
-                    float density =
-                        get_density(rayPos);
+                    float density =  get_density(rayPos);
+
+                    if (density <= 0.001)
+                    {
+                        distTravelled += _StepSize;
+                        continue;
+                    }
 
                     if (density > 0.001)
                     {
@@ -272,8 +234,7 @@ Shader "Custom/VolumeFog"
                                 transmittance
                             );
 
-                        transmittance *=
-                            exp(-density * _StepSize);
+                        transmittance *=  exp(-density * _StepSize);
 
                         if (transmittance < 0.01)
                             break;
@@ -286,12 +247,9 @@ Shader "Custom/VolumeFog"
                     (1.0 - saturate(transmittance)) *
                     _FogOpacity;
 
-                float3 finalFog =
-                    (_Color.rgb * fogAmount) +
-                    fogLighting;
+                float3 finalFog = (_Color.rgb * fogAmount) + fogLighting;
 
-                float3 finalColor =
-                    lerp(
+                float3 finalColor = lerp(
                         sceneColor.rgb,
                         finalFog,
                         fogAmount
