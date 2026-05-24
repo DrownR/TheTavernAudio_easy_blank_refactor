@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.siestagames.urpplanarreflections": "file:C:/Users/radio/Downloads/URP-PlanarReflections-main",
     "com.unity.collab-proxy": "2.12.4",
     "com.unity.feature.development": "1.0.2",
     "com.unity.multiplayer.center": "1.0.1",
