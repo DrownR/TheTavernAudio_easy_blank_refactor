@@ -16,6 +16,7 @@ public class Doors : MonoBehaviour, IInteractable
     [SerializeField]
     private bool isRotating = false;
 
+    RoomAmbient roomAmbient = null;
     // FMOD - Dźwięk drzwi.
     private FMOD.Studio.EventInstance doorsSoundInstance;
     public EventReference doorsEvent;
@@ -88,7 +89,7 @@ public class Doors : MonoBehaviour, IInteractable
     /// </summary>
     private void RoomsSnap()
     {
-        RoomAmbient roomAmbient = FindObjectOfType<RoomAmbient>();
+        roomAmbient = roomAmbient == null ? FindFirstObjectByType<RoomAmbient>() : roomAmbient;
 
         // Logika włączania i wyłączania snapshotu.
         if (roomAmbient.ambientActivated && doorsOpened)
