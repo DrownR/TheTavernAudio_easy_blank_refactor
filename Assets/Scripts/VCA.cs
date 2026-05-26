@@ -1,6 +1,4 @@
 using UnityEngine;
-using FMODUnity;
-using FMOD.Studio;
 
 /// <summary>
 /// Zarządza głośnością ścieżek audio poprzez FMOD VCAs.
@@ -9,9 +7,8 @@ public class VCA : MonoBehaviour
 {
     // FMOD - Referencje do VCAs.
     private FMOD.Studio.VCA globalVCA;
+    private FMOD.Studio.VCA sfxVCA;
     private FMOD.Studio.VCA musicVCA;
-    private FMOD.Studio.VCA tavernVCA;
-    private FMOD.Studio.VCA outsideVCA;
 
     // Flagi stanu wyciszenia.
     [SerializeField]
@@ -20,19 +17,13 @@ public class VCA : MonoBehaviour
     private bool musicMuteActive = false;
     [SerializeField]
     private bool tavernMuteActive = false;
-    [SerializeField]
-    private bool outsideMuteActive = false;
 
     void Start()
     {
         // Pobiera VCAs z FMOD.
-        globalVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Mute");
-        musicVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Music");
-        tavernVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Tavern_amb");
-        outsideVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Outside_amb");
-
-        // Ustawia początkową głośność.
-        globalVCA.setVolume(DecibelToLinear(-100));
+        globalVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Global");
+        sfxVCA = FMODUnity.RuntimeManager.GetVCA("vca:/Music");
+        musicVCA = FMODUnity.RuntimeManager.GetVCA("vca:/SFX");
     }
 
     void Update()
@@ -44,15 +35,11 @@ public class VCA : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.I))
         {
-            ToggleMute(musicVCA, ref musicMuteActive);
+            ToggleMute(sfxVCA, ref musicMuteActive);
         }
         if (Input.GetKeyDown(KeyCode.O))
         {
-            ToggleMute(tavernVCA, ref tavernMuteActive);
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            ToggleMute(outsideVCA, ref outsideMuteActive);
+            ToggleMute(musicVCA, ref tavernMuteActive);
         }
     }
 
@@ -74,5 +61,11 @@ public class VCA : MonoBehaviour
     private float DecibelToLinear(float dB)
     {
         return Mathf.Pow(10.0f, dB / 20f);
+    }
+
+    public void ChangeVolume(string vcaPath, float value)
+    {
+        FMODUnity.RuntimeManager.GetVCA(vcaPath).setVolume(DecibelToLinear(value));
+
     }
 }

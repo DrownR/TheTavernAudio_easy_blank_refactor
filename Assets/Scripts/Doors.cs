@@ -34,7 +34,7 @@ public class Doors : MonoBehaviour, IInteractable
         {
             // Przełącza stan drzwi (otwarte/zamknięte) i uruchamia odpowiednie akcje.
             doorsOpened = !doorsOpened;
-            StartCoroutine(RotateDoors(doorsOpened ? -65 : 65));
+            StartCoroutine(RotateDoors(doorsOpened ? 80 : -80));
             PlaySound();
             RoomsSnap();
         }
@@ -79,7 +79,7 @@ public class Doors : MonoBehaviour, IInteractable
         
         // Ustawia parametr "Doors" w zależności od stanu drzwi.
         string parameterLabel = doorsOpened ? "Open" : "Close";
-        doorsSoundInstance.setParameterByNameWithLabel("Doors", parameterLabel);
+        doorsSoundInstance.setParameterByNameWithLabel("Door_State_Switcher", parameterLabel);
         
         doorsSoundInstance.start();
     }

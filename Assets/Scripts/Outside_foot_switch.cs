@@ -68,7 +68,7 @@ public class Outside_foot_switch : MonoBehaviour
 
             if (insideSnapshotInstance.isValid())
             {
-                insideSnapshotInstance.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                insideSnapshotInstance.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
                 insideSnapshotInstance.release();
             }
         }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(CharacterController))]
@@ -20,7 +18,7 @@ public class FPSController : MonoBehaviour
     float rotationX = 0;
 
     public bool canMove = true;
-
+    private bool canHandleInput = true;
 
     CharacterController characterController;
     void Start()
@@ -32,6 +30,7 @@ public class FPSController : MonoBehaviour
 
     void Update()
     {
+        if (!canHandleInput) return;
 
         #region Handles Movement
         Vector3 forward = transform.TransformDirection(Vector3.forward);
