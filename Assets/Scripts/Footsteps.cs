@@ -16,6 +16,9 @@ public class Footsteps : MonoBehaviour
     public EventReference jumpEvent;
     public EventReference landEvent;
 
+    [SerializeField] private float walkSoundInterval = 0.6f;
+    [SerializeField] private float runSoundInterval = 0.4f;
+
     // Usunięto: private Dictionary<string, string> surfaceTags;
 
     private float lastFootstepTime = 0f;
@@ -60,10 +63,10 @@ public class Footsteps : MonoBehaviour
         if (isMoving && IsGrounded())
         {
             // Ustawia interwał na podstawie tego, czy gracz biegnie.
-            float footstepInterval = isRunning ? 0.25f : 0.5f;
+            float footstepInterval = isRunning ? runSoundInterval : walkSoundInterval;
 
             if (Time.time - lastFootstepTime > footstepInterval)
-            {
+            { 
                 lastFootstepTime = Time.time;
                 PlayFootsteps();
             }

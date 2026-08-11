@@ -60,7 +60,7 @@ GraphicsSettings:
     UnityEngine.Rendering.Universal.UniversalRenderPipeline: {fileID: 11400000, guid: dbe2ebb4f0b5d7a48a51ee1ea976b37e, type: 2}
   m_ShaderBuildSettings:
     keywordDeclarationOverrides: []
-  m_LightsUseLinearIntensity: 1
+  m_LightsUseLinearIntensity: 0
   m_LightsUseColorTemperature: 1
   m_LogWhenShaderIsCompiled: 0
   m_LightProbeOutsideHullStrategy: 0

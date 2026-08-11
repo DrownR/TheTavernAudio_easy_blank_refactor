@@ -12,16 +12,14 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
-  - _ALPHATEST_ON
-  - _ENVIRONMENTREFLECTIONS_OFF
   - _SPECULAR_SETUP
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
+  m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2450
+  m_CustomRenderQueue: 2000
   stringTagMap:
-    RenderType: TransparentCutout
+    RenderType: Opaque
   disabledShaderPasses:
   - MOTIONVECTORS
   m_LockedProperties: 
@@ -87,8 +85,8 @@ Material:
     m_Ints: []
     m_Floats:
     - _AddPrecomputedVelocity: 0
-    - _AlphaClip: 1
-    - _AlphaToMask: 1
+    - _AlphaClip: 0
+    - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
@@ -100,11 +98,11 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _DstBlendAlpha: 0
-    - _EnvironmentReflections: 0
+    - _EnvironmentReflections: 1
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
-    - _Metallic: 0
+    - _Metallic: 0.3
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
@@ -121,8 +119,8 @@ Material:
     - _XRMotionVectorsPass: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.9044118, g: 0.9044118, b: 0.9044118, a: 1}
-    - _Color: {r: 0.9044118, g: 0.9044118, b: 0.9044118, a: 1}
+    - _BaseColor: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
+    - _Color: {r: 0.38679248, g: 0.38679248, b: 0.38679248, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
